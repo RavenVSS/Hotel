@@ -1,8 +1,5 @@
 package com.example.hotel.room;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class RoomsService implements RoomService {
 
     public Room create(int type, String pictureName, int storey, int bedCount, TvStatus tvStatus,
