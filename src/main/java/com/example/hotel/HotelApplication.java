@@ -17,8 +17,17 @@ public class HotelApplication {
 
 		RoomService roomService = context.getBean("roomsService", RoomsService.class);
 
-		Room room = roomService.create(0, "", 1, 1, TvStatus.ABSENT,
-				BalconyStatus.ABSENT, FridgeStatus.ABSENT, AvailableStatus.AVAILABLE);
+		Room.BuilderRoom builderRoom = new Room.BuilderRoom()
+				.type(0)
+				.pictureName("name")
+				.storey(1)
+				.bedCount(1)
+				.tvStatus(AvailableStatus.AVAILABLE)
+				.balconyStatus(AvailableStatus.AVAILABLE)
+				.fridgeStatus(AvailableStatus.AVAILABLE)
+				.availableStatus(AvailableStatus.AVAILABLE);
+
+		Room room = roomService.create(builderRoom);
 
 		System.out.println(room.getString());
 	}
