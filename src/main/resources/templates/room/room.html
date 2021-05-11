@@ -7,6 +7,11 @@
 <body>
 
 <p th:text="'Room:  '+ ${id}" />
-
+<a href="/room/all">Вывести все комнаты</a>
+<form action="/room/add" method="post">
+    <p><input type="text" name="pictureName" placeholder="Имя фото"></p>
+    <p><input type="text" name="storey" placeholder="Этаж"></p>
+    <p><input type="submit" value="Добавить комнату"></p>
+</form>
 </body>
 </html>
