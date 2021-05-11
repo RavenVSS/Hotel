@@ -7,8 +7,8 @@ public class Room {
     private int bedCount;
     private AvailableStatus tvStatus;
     private AvailableStatus balconyStatus;
-    private  AvailableStatus fridgeStatus;
-    private  AvailableStatus availableStatus;
+    private AvailableStatus fridgeStatus;
+    private AvailableStatus availableStatus;
 
     public static class BuilderRoom {
         private int type;
