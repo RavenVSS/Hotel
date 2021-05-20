@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 public class RoomConfig {
 
     @Bean
-    public RoomsService roomsService() {
-        return new RoomsService();
+    public RoomsService roomsService(RoomRepository roomRepository) {
+        return new RoomsService(roomRepository);
     }
 }

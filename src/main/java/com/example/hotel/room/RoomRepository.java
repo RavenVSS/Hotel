@@ -1,7 +1,7 @@
 package com.example.hotel.room;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RoomRepository extends CrudRepository<Room, Integer> {
+public interface RoomRepository extends JpaRepository<Room, Integer> {
 
 }

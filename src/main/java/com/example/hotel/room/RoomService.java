@@ -2,5 +2,9 @@ package com.example.hotel.room;
 
 public interface RoomService {
 
-    Room create(Room.BuilderRoom builderRoom);
+    void create(Room room);
+
+    Iterable<Room> findAll();
+
+    Room findAt(Integer id);
 }

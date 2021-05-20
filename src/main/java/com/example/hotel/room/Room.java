@@ -1,28 +1,39 @@
 package com.example.hotel.room;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "rooms")
 public class Room {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name = "room_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private int type;
-    private String pictureName;
-    private int storey;
-    private int bedCount;
-    private AvailableStatus tvStatus;
-    private AvailableStatus balconyStatus;
-    private AvailableStatus fridgeStatus;
-    private AvailableStatus availableStatus;
 
-    public int getType() {
-        return type;
-    }
+    @Column(name = "picture_name")
+    private String pictureName;
+
+    @Column(name = "storey")
+    private int storey;
+
+    @Column(name = "bed_count")
+    private int bedCount;
+
+    @Column(name = "price")
+    private int price;
+
+    @Column(name = "tv_status")
+    private AvailableStatus tvStatus;
+
+    @Column(name = "balcony_status")
+    private AvailableStatus balconyStatus;
+
+    @Column(name = "fridge_status")
+    private AvailableStatus fridgeStatus;
+
+    @Column(name = "available_status")
+    private AvailableStatus availableStatus;
 
     public String getPictureName() {
         return pictureName;
@@ -34,6 +45,10 @@ public class Room {
 
     public int getBedCount() {
         return bedCount;
+    }
+
+    public int getPrice() {
+        return price;
     }
 
     public AvailableStatus getTvStatus() {
@@ -53,19 +68,14 @@ public class Room {
     }
 
     public static class BuilderRoom {
-        private int type;
         private String pictureName;
         private int storey;
         private int bedCount;
+        private int price;
         private AvailableStatus tvStatus;
         private AvailableStatus balconyStatus;
         private  AvailableStatus fridgeStatus;
         private  AvailableStatus availableStatus;
-
-        public BuilderRoom type(int value) {
-            this.type = value;
-            return this;
-        }
 
         public BuilderRoom pictureName(String value) {
             this.pictureName = value;
@@ -79,6 +89,11 @@ public class Room {
 
         public BuilderRoom bedCount(int value) {
             this.bedCount = value;
+            return this;
+        }
+
+        public BuilderRoom price(int value) {
+            this.price = value;
             return this;
         }
 
@@ -108,10 +123,10 @@ public class Room {
     }
 
     public Room() {
-        this.type = 0;
         this.pictureName = "";
         this.storey = -1;
         this.bedCount = -1;
+        this.price = 0;
         this.tvStatus = AvailableStatus.NOT_AVAILABLE;
         this.balconyStatus = AvailableStatus.NOT_AVAILABLE;
         this.fridgeStatus = AvailableStatus.NOT_AVAILABLE;
@@ -119,10 +134,10 @@ public class Room {
     }
 
     public Room(BuilderRoom builderRoom) {
-        this.type = builderRoom.type;
         this.pictureName = builderRoom.pictureName;
         this.storey = builderRoom.storey;
         this.bedCount = builderRoom.bedCount;
+        this.price = builderRoom.price;
         this.tvStatus = builderRoom.tvStatus;
         this.balconyStatus = builderRoom.balconyStatus;
         this.fridgeStatus = builderRoom.fridgeStatus;
@@ -131,8 +146,8 @@ public class Room {
 
     @Override
     public String toString() {
-        return "type:" + type + " picName:" + pictureName + " storey:" + storey
-                + " bedCount:" + bedCount + " tvStatus:" + tvStatus + " balconyStatus:" + balconyStatus
+        return " picName:" + pictureName + " storey:" + storey
+                + " bedCount:" + bedCount + " price:" + price + " tvStatus:" + tvStatus + " balconyStatus:" + balconyStatus
                 + " fridgeStatus:" + fridgeStatus + " availableStatus:" + availableStatus;
     }
 }
