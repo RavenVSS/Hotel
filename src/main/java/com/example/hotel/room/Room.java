@@ -24,16 +24,24 @@ public class Room {
     private int price;
 
     @Column(name = "tv_status")
+    @Enumerated(EnumType.STRING)
     private AvailableStatus tvStatus;
 
     @Column(name = "balcony_status")
+    @Enumerated(EnumType.STRING)
     private AvailableStatus balconyStatus;
 
     @Column(name = "fridge_status")
+    @Enumerated(EnumType.STRING)
     private AvailableStatus fridgeStatus;
 
     @Column(name = "available_status")
+    @Enumerated(EnumType.STRING)
     private AvailableStatus availableStatus;
+
+    public Integer getId() {
+        return id;
+    }
 
     public String getPictureName() {
         return pictureName;
@@ -67,6 +75,10 @@ public class Room {
         return availableStatus;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public static class BuilderRoom {
         private String pictureName;
         private int storey;
@@ -74,8 +86,8 @@ public class Room {
         private int price;
         private AvailableStatus tvStatus;
         private AvailableStatus balconyStatus;
-        private  AvailableStatus fridgeStatus;
-        private  AvailableStatus availableStatus;
+        private AvailableStatus fridgeStatus;
+        private AvailableStatus availableStatus;
 
         public BuilderRoom pictureName(String value) {
             this.pictureName = value;
