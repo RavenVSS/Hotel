@@ -21,8 +21,8 @@ public class RoomController {
     @PostMapping("create")
     @ResponseStatus(value = HttpStatus.CREATED)
     public void addNewRoom (@RequestBody RoomCreateDto roomCreateDto) {
-        Room room = convertToEntity(roomCreateDto);
-        roomService.create(room);
+        RoomCreateArg roomCreateArg = convertToRoomArg(roomCreateDto);
+        roomService.create(roomCreateArg);
     }
 
     @GetMapping("{id}")
@@ -41,9 +41,8 @@ public class RoomController {
     public void updateRoom(
             @PathVariable("id") Integer roomId,
             @RequestBody RoomCreateDto roomCreateDto) {
-        Room room = convertToEntity(roomCreateDto);
-        room.setId(roomId);
-        roomService.update(room);
+        RoomCreateArg roomCreateArg = convertToRoomArg(roomCreateDto);
+        roomService.update(roomCreateArg, roomId);
     }
 
     @PostMapping("{id}/delete")
@@ -89,8 +88,8 @@ public class RoomController {
         return roomDto;
     }
 
-    private Room convertToEntity(RoomCreateDto roomCreateDto) {
-        Room room = new Room.BuilderRoom()
+    private RoomCreateArg convertToRoomArg(RoomCreateDto roomCreateDto) {
+        RoomCreateArg roomCreateArg = new RoomCreateArg.BuilderRoomCreateArg()
                 .pictureName(roomCreateDto.getPictureName())
                 .storey(roomCreateDto.getStorey())
                 .bedCount(roomCreateDto.getBedCount())
@@ -100,6 +99,6 @@ public class RoomController {
                 .fridgeStatus(roomCreateDto.getFridgeStatus())
                 .availableStatus(roomCreateDto.getAvailableStatus())
                 .build();
-        return room;
+        return roomCreateArg;
     }
 }

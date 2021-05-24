@@ -5,9 +5,9 @@ import java.util.List;
 
 public interface RoomService {
 
-    void create(Room room);
+    void create(RoomCreateArg arg);
 
-    void update(Room room);
+    void update(RoomCreateArg arg, int roomId);
 
     void delete(Integer id);
 
