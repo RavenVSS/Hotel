@@ -1,8 +1,13 @@
 package com.example.hotel.room;
 
+import java.util.Date;
+import java.util.List;
+
 public interface RoomService {
 
     void create(Room room);
+
+    void update(Room room);
 
     void delete(Integer id);
 
@@ -10,5 +15,5 @@ public interface RoomService {
 
     Room findAt(Integer id);
 
-    // TODO Iterable<Rooms> findFreeRooms();
+    List<Room> findFreeRooms(String start, String end);
 }
