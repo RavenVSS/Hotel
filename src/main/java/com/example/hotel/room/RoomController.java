@@ -20,7 +20,7 @@ public class RoomController {
 
     @PostMapping("create")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public void addNewRoom (@RequestBody RoomCreateDto roomCreateDto) {
+    public void addNewRoom(@RequestBody RoomCreateDto roomCreateDto) {
         RoomCreateArg roomCreateArg = convertToRoomArg(roomCreateDto);
         roomService.create(roomCreateArg);
     }
@@ -48,7 +48,6 @@ public class RoomController {
     @PostMapping("{id}/delete")
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteRoom(@PathVariable("id") Integer id) {
-        // TODO response status 404
         roomService.delete(id);
     }
 

@@ -1,11 +1,8 @@
 package com.example.hotel.room;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class RoomServiceImpl implements RoomService {
@@ -27,12 +24,14 @@ public class RoomServiceImpl implements RoomService {
             .balconyStatus(arg.getBalconyStatus())
             .fridgeStatus(arg.getFridgeStatus())
             .availableStatus(arg.getAvailableStatus())
-            .build()
-        );
+            .build());
     }
 
     @Override
     public void update(RoomCreateArg arg, int roomId) {
+        roomRepository.findById(roomId)
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+
         Room room = new Room.BuilderRoom()
                 .pictureName(arg.getPictureName())
                 .storey(arg.getStorey())
@@ -44,11 +43,15 @@ public class RoomServiceImpl implements RoomService {
                 .availableStatus(arg.getAvailableStatus())
                 .build();
         room.setId(roomId);
+
         roomRepository.save(room);
     }
 
     @Override
     public void delete(Integer id) {
+        Room room = roomRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+
         roomRepository.deleteById(id);
     }
 
@@ -59,8 +62,10 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Room findAt(Integer id) {
-        Optional<Room> roomOptional = roomRepository.findById(id);
-        return roomOptional.orElse(null);
+        Room room = roomRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+
+        return room;
     }
 
     @Override
