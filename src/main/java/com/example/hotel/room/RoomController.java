@@ -3,12 +3,14 @@ package com.example.hotel.room;
 import com.example.hotel.room.dto.RoomCreateDto;
 import com.example.hotel.room.dto.RoomDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -27,6 +29,7 @@ public class RoomController {
 
     @GetMapping("{id}")
     public RoomDto getAtRoom(@PathVariable Integer id) {
+        // TODO Return 404
         Room room = roomService.findAt(id);
         if (room == null) {
             throw new ResponseStatusException(
@@ -41,6 +44,7 @@ public class RoomController {
     public void updateRoom(
             @PathVariable("id") Integer roomId,
             @RequestBody RoomCreateDto roomCreateDto) {
+        // TODO Return 404
         RoomCreateArg roomCreateArg = convertToRoomArg(roomCreateDto);
         roomService.update(roomCreateArg, roomId);
     }
@@ -48,6 +52,7 @@ public class RoomController {
     @PostMapping("{id}/delete")
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteRoom(@PathVariable("id") Integer id) {
+        // TODO Return 404
         roomService.delete(id);
     }
 
@@ -62,8 +67,10 @@ public class RoomController {
     }
 
     @GetMapping("free")
-    public List<RoomDto> getFreeRooms(@RequestParam("startDate") String start,
-                                      @RequestParam("endDate") String end) {
+    public List<RoomDto> getFreeRooms(@RequestParam("startDate")
+                                      @DateTimeFormat(pattern="yyyy-MM-dd") Date start,
+                                      @RequestParam("endDate")
+                                      @DateTimeFormat(pattern="yyyy-MM-dd") Date end) {
         List<Room> rooms = roomService.findFreeRooms(start, end);
         List<RoomDto> roomDtoList = new ArrayList<>();
         for (Room room : rooms) {

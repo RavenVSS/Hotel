@@ -15,5 +15,5 @@ public interface RoomService {
 
     Room findAt(Integer id);
 
-    List<Room> findFreeRooms(String start, String end);
+    List<Room> findFreeRooms(Date start, Date end);
 }

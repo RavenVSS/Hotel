@@ -2,6 +2,7 @@ package com.example.hotel.room;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -69,7 +70,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public List<Room> findFreeRooms(String start, String end) {
+    public List<Room> findFreeRooms(Date start, Date end) {
         return roomRepository.findFreeRooms(start, end);
     }
 

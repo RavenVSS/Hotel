@@ -13,5 +13,5 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
             "where room_id not in (SELECT room_id FROM reservation " +
             "where begin_date BETWEEN cast(:start as date)  AND cast(:end as date) " +
             "OR cast(:start as date) BETWEEN begin_date AND end_date)", nativeQuery = true)
-    List<Room> findFreeRooms(@Param("start") String start, @Param("end") String end);
+    List<Room> findFreeRooms(@Param("start") Date start, @Param("end") Date end);
 }
