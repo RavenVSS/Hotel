@@ -17,14 +17,14 @@ public class GuestController {
     private final GuestService guestService;
     private final GuestMapper guestMapper;
 
-    @PostMapping("create")
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public void addNewGuest(@RequestBody GuestCreateDto guestCreateDto) {
-        guestService.create(guestMapper.fromDto(guestCreateDto));
-    }
-
-    @GetMapping("list")
-    public List<GuestDto> getAllGuests(){
-        return null;
-    }
+//    @PostMapping("create")
+//    @ResponseStatus(value = HttpStatus.CREATED)
+//    public void addNewGuest(@RequestBody GuestCreateDto guestCreateDto) {
+//        guestService.create(guestMapper.fromDto(guestCreateDto));
+//    }
+//
+//    @GetMapping("list")
+//    public List<GuestDto> getAllGuests(){
+//        return null;
+//    }
 }
