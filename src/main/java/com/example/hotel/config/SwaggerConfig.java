@@ -1,4 +1,4 @@
-package com.example.hotel.swagger;
+package com.example.hotel.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
