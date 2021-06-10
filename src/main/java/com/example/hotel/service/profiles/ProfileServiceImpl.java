@@ -1,6 +1,6 @@
 package com.example.hotel.service.profiles;
 
-import com.example.hotel.exceptions.ProfileNotFoundException;
+import com.example.hotel.exceptions.EntityNotFoundException;
 import com.example.hotel.model.profiles.Profile;
 import com.example.hotel.model.profiles.ProfileCreateArg;
 import com.example.hotel.repository.profiles.ProfileRepository;
@@ -34,25 +34,24 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional
     public void delete(Integer id) {
         profileRepository.findById(id)
-                .orElseThrow(() -> new ProfileNotFoundException());
+                .orElseThrow(() -> new EntityNotFoundException("Profile not found"));
         profileRepository.deleteById(id);
     }
 
     @Override
     @Transactional
     public void update(ProfileCreateArg profileCreateArg, Integer id) {
-        profileRepository.findById(id)
-                .orElseThrow(() -> new ProfileNotFoundException());
-        Profile profile = Profile.builder()
-                .address(profileCreateArg.getAddress())
-                .userId(profileCreateArg.getUserId())
-                .birthdayDate(profileCreateArg.getBirthdayDate())
-                .passport(profileCreateArg.getPassport())
-                .passportDate(profileCreateArg.getPassportDate())
-                .passportRegion(profileCreateArg.getPassportRegion())
-                .townName(profileCreateArg.getTownName())
-                .build();
-        profile.setId(id);
+        Profile profile = profileRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Profile not found"));
+
+        profile.setAddress(profileCreateArg.getAddress());
+        profile.setUserId(profileCreateArg.getUserId());
+        profile.setBirthdayDate(profileCreateArg.getBirthdayDate());
+        profile.setPassport(profileCreateArg.getPassport());
+        profile.setPassportDate(profileCreateArg.getPassportDate());
+        profile.setPassportRegion(profileCreateArg.getPassportRegion());
+        profile.setTownName(profileCreateArg.getTownName());
+
         profileRepository.save(profile);
     }
 
@@ -60,7 +59,7 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional(readOnly = true)
     public List<Profile> findAll() {
         List<Profile> profileList = profileRepository.findAll();
-        if (profileList.isEmpty()) throw new ProfileNotFoundException();
+        if (profileList.isEmpty()) throw new EntityNotFoundException("Profile not found");
         return profileList;
     }
 
@@ -68,14 +67,14 @@ public class ProfileServiceImpl implements ProfileService {
     @Transactional(readOnly = true)
     public Profile findAt(Integer id) {
         return profileRepository.findById(id)
-                .orElseThrow(() -> new ProfileNotFoundException());
+                .orElseThrow(() -> new EntityNotFoundException("Profile not found"));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Profile findByUserId(Integer userId) {
         Profile profile = profileRepository.findByUserId(userId);
-        if (profile == null) throw new ProfileNotFoundException();
+        if (profile == null) throw new EntityNotFoundException("Profile not found");
         return profile;
     }
 }

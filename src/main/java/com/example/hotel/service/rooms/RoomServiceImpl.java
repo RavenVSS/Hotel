@@ -1,6 +1,6 @@
 package com.example.hotel.service.rooms;
 
-import com.example.hotel.exceptions.RoomNotFoundException;
+import com.example.hotel.exceptions.EntityNotFoundException;
 import com.example.hotel.model.rooms.RoomCreateArg;
 import com.example.hotel.model.rooms.Room;
 import com.example.hotel.repository.rooms.RoomRepository;
@@ -35,20 +35,17 @@ public class RoomServiceImpl implements RoomService {
     @Override
     @Transactional
     public void update(RoomCreateArg arg, int roomId) {
-        roomRepository.findById(roomId)
-                .orElseThrow(() -> new RoomNotFoundException());
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException("Room not found"));
 
-        Room room = Room.builder()
-                .pictureName(arg.getPictureName())
-                .storey(arg.getStorey())
-                .bedCount(arg.getBedCount())
-                .price(arg.getPrice())
-                .tvStatus(arg.getTvStatus())
-                .balconyStatus(arg.getBalconyStatus())
-                .fridgeStatus(arg.getFridgeStatus())
-                .availableStatus(arg.getAvailableStatus())
-                .build();
-        room.setId(roomId);
+        room.setPictureName(arg.getPictureName());
+        room.setStorey(arg.getStorey());
+        room.setBedCount(arg.getBedCount());
+        room.setPrice(arg.getPrice());
+        room.setTvStatus(arg.getTvStatus());
+        room.setBalconyStatus(arg.getBalconyStatus());
+        room.setFridgeStatus(arg.getFridgeStatus());
+        room.setAvailableStatus(arg.getAvailableStatus());
 
         roomRepository.save(room);
     }
@@ -57,7 +54,7 @@ public class RoomServiceImpl implements RoomService {
     @Transactional
     public void delete(Integer id) {
         roomRepository.findById(id)
-                .orElseThrow(() -> new RoomNotFoundException());
+                .orElseThrow(() -> new EntityNotFoundException("Room not found"));
         roomRepository.deleteById(id);
     }
 
@@ -71,7 +68,7 @@ public class RoomServiceImpl implements RoomService {
     @Transactional(readOnly = true)
     public Room findAt(Integer id) {
         Room room = roomRepository.findById(id)
-                .orElseThrow(() -> new RoomNotFoundException());
+                .orElseThrow(() -> new EntityNotFoundException("Room not found"));
         return room;
     }
 

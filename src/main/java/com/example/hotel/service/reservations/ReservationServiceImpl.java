@@ -1,6 +1,6 @@
 package com.example.hotel.service.reservations;
 
-import com.example.hotel.exceptions.ReservationNotFoundException;
+import com.example.hotel.exceptions.EntityNotFoundException;
 import com.example.hotel.model.reservations.ActualStatus;
 import com.example.hotel.model.reservations.Reservation;
 import com.example.hotel.model.reservations.ReservationCreateArg;
@@ -21,11 +21,10 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public void create(ReservationCreateArg reservationCreateArg) {
-        // TODO add receipt
-        // TODO worker from session
         reservationRepository.save(Reservation.builder()
             .roomId(reservationCreateArg.getRoomId())
             .actualStatus(ActualStatus.ACTUAL)
+            .receipt(reservationCreateArg.getReceipt())
             .payStatus(reservationCreateArg.getPayStatus())
             .beginDate(reservationCreateArg.getBeginDate())
             .endDate(reservationCreateArg.getEndDate())
@@ -41,29 +40,27 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public void delete(Integer id) {
         reservationRepository.findById(id)
-                .orElseThrow(() -> new ReservationNotFoundException());
+                .orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
         reservationRepository.deleteById(id);
     }
 
     @Override
     public void update(ReservationCreateArg reservationCreateArg, Integer id) {
-        reservationRepository.findById(id)
-                .orElseThrow(() -> new ReservationNotFoundException());
-        // TODO add receipt
-        // TODO worker from session
-        Reservation reservation = Reservation.builder()
-                .roomId(reservationCreateArg.getRoomId())
-                .actualStatus(ActualStatus.ACTUAL)
-                .payStatus(reservationCreateArg.getPayStatus())
-                .beginDate(reservationCreateArg.getBeginDate())
-                .endDate(reservationCreateArg.getEndDate())
-                .guestId(reservationCreateArg.getGuestId())
-                .workerId(reservationCreateArg.getWorkerId())
-                .money(reservationCreateArg.getMoney())
-                .comment(reservationCreateArg.getComment())
-                .paymentMethodId(reservationCreateArg.getPaymentMethodId())
-                .build();
-        reservation.setId(id);
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
+
+        reservation.setRoomId(reservationCreateArg.getRoomId());
+        reservation.setActualStatus(reservationCreateArg.getActualStatus());
+        reservation.setPayStatus(reservationCreateArg.getPayStatus());
+        reservation.setBeginDate(reservationCreateArg.getBeginDate());
+        reservation.setEndDate(reservationCreateArg.getEndDate());
+        reservation.setGuestId(reservationCreateArg.getGuestId());
+        reservation.setWorkerId(reservationCreateArg.getWorkerId());
+        reservation.setMoney(reservationCreateArg.getMoney());
+        reservation.setReceipt(reservationCreateArg.getReceipt());
+        reservation.setComment(reservationCreateArg.getComment());
+        reservation.setPaymentMethodId(reservationCreateArg.getPaymentMethodId());
+
         reservationRepository.save(reservation);
     }
 
@@ -71,7 +68,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional(readOnly = true)
     public List<Reservation> findAll() {
         List<Reservation> reservationList = reservationRepository.findAll();
-        if (reservationList.isEmpty()) throw new ReservationNotFoundException();
+        if (reservationList.isEmpty()) throw new EntityNotFoundException("Reservation not found");
         return reservationList;
     }
 
@@ -79,7 +76,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional(readOnly = true)
     public Reservation findAt(Integer id) {
         Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new ReservationNotFoundException());
+                .orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
         return reservation;
     }
 
@@ -87,7 +84,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional(readOnly = true)
     public List<Reservation> findByBeginDate(Date beginDate) {
         List<Reservation> reservationList = reservationRepository.findByBeginDate(beginDate);
-        if (reservationList.isEmpty()) throw new ReservationNotFoundException();
+        if (reservationList.isEmpty()) throw new EntityNotFoundException("Reservation not found");
         return reservationList;
     }
 
@@ -95,7 +92,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional(readOnly = true)
     public List<Reservation> findByName(String firstName, String secondName) {
         List<Reservation> reservationList = reservationRepository.findByName(firstName, secondName);
-        if (reservationList.isEmpty()) throw new ReservationNotFoundException();
+        if (reservationList.isEmpty()) throw new EntityNotFoundException("Reservation not found");
         return reservationList;
     }
 
