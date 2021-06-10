@@ -55,6 +55,7 @@ public class RoomServiceImpl implements RoomService {
     public void delete(Integer id) {
         roomRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Room not found"));
+
         roomRepository.deleteById(id);
     }
 
