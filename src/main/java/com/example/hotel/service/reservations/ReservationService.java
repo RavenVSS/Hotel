@@ -21,4 +21,6 @@ public interface ReservationService {
     List<Reservation> findByBeginDate(Date beginDate);
 
     List<Reservation> findByName(String firstName, String secondName);
+
+    List<Reservation> findByGuestId(Integer guestId);
 }

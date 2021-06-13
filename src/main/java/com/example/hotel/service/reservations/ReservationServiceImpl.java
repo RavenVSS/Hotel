@@ -96,4 +96,11 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationList;
     }
 
+    @Override
+    public List<Reservation> findByGuestId(Integer guestId) {
+        List<Reservation> reservationList = reservationRepository.findByGuestId(guestId);
+        if (reservationList.isEmpty()) throw new EntityNotFoundException("Reservation not found");
+        return reservationList;
+    }
+
 }

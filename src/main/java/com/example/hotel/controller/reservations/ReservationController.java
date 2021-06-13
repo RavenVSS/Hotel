@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -27,12 +28,13 @@ public class ReservationController {
     private final AuthenticationService authService;
     private final ReceiptService receiptService;
 
+    //TODO update reservations current user
+
     @PostMapping("create")
+    @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
     @ApiOperation(value = "Создать новую запись бронирования", nickname = "New reservation")
     @ResponseStatus(value = HttpStatus.CREATED)
     public void addNewReservation (@RequestBody ReservationCreateDto reservationCreateDto) {
-
-        //TODO refactor workerId and receipt
         reservationCreateDto.setWorkerId(authService.getCurrentUserId());
         reservationCreateDto.setReceipt(receiptService.getReceipt(reservationCreateDto.getGuestId(),
                 reservationCreateDto.getRoomId()));
@@ -40,6 +42,7 @@ public class ReservationController {
     }
 
     @PostMapping("{id}/update")
+    @PreAuthorize("hasRole('WORKER')")
     @ApiOperation(value = "Обновить запись бронирования по ID", nickname = "Update reservation")
     @ResponseStatus(value = HttpStatus.OK)
     public void updateReservation (@RequestBody ReservationCreateDto reservationCreateDto,
@@ -48,6 +51,7 @@ public class ReservationController {
     }
 
     @PostMapping("{id}/delete")
+    @PreAuthorize("hasRole('WORKER')")
     @ApiOperation(value = "Удалить запись бронирования по ID", nickname = "Delete reservation")
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteReservation(@PathVariable("id") Integer id) {
@@ -55,6 +59,7 @@ public class ReservationController {
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasRole('WORKER')")
     @ApiOperation(value = "Получить запись бронирования по ID", nickname = "Get at reservation")
     public ReservationDto getAtReservation(@PathVariable("id") Integer id) {
         Reservation reservation = reservationService.findAt(id);
@@ -63,12 +68,14 @@ public class ReservationController {
     }
 
     @GetMapping("list")
+    @PreAuthorize("hasRole('WORKER')")
     @ApiOperation(value = "Получить все записи бронирования", nickname = "Get all reservation")
     public List<ReservationDto> getAllReservations() {
         return reservationMapper.toList(reservationService.findAll());
     }
 
     @GetMapping("search/name")
+    @PreAuthorize("hasRole('WORKER')")
     @ApiOperation(value = "Получить все записи бронирования по имени и фамилии гостя",
             nickname = "Get reservations by name")
     public List<ReservationDto> getReservationsByName(@RequestParam("firstName") String firstName,
@@ -77,9 +84,17 @@ public class ReservationController {
     }
 
     @GetMapping("search/date")
+    @PreAuthorize("hasRole('WORKER')")
     @ApiOperation(value = "Получить все записи бронирования по дате приезда", nickname = "Get reservations by date")
     public List<ReservationDto> getReservationsByDate(@RequestParam("beginDate")
                                                       @DateTimeFormat(pattern="yyyy-MM-dd") Date beginDate) {
         return reservationMapper.toList(reservationService.findByBeginDate(beginDate));
+    }
+
+    @GetMapping("current")
+    @PreAuthorize("hasRole('USER') || hasRole('WORKER')")
+    @ApiOperation(value = "Получить все записи бронирования текущего пользователя", nickname = "Get reservations current user")
+    public List<ReservationDto> getReservationsCurrentUser() {
+        return reservationMapper.toList(reservationService.findByGuestId(authService.getCurrentUserId()));
     }
 }

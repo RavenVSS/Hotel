@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ExceptionHandlerController {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(EntityNotFoundException.class)
+    @ExceptionHandler({EntityNotFoundException.class, LoginIsNotFreeException.class})
     @ResponseBody
     public ErrorDto handleConflict(Exception ex) {
         return new ErrorDto(ex.getLocalizedMessage());

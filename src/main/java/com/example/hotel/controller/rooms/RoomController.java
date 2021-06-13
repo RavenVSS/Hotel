@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -26,6 +27,7 @@ public class RoomController {
     private final RoomMapper roomMapper;
 
     @PostMapping("create")
+    @PreAuthorize("hasRole('WORKER')")
     @ApiOperation(value = "Создать новую комнату", nickname = "New room")
     @ResponseStatus(value = HttpStatus.CREATED)
     public void addNewRoom(@RequestBody RoomCreateDto roomCreateDto) {
@@ -34,6 +36,7 @@ public class RoomController {
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
     @ApiOperation(value = "Получить комнату по ID", nickname = "Get at room")
     public RoomDto getAtRoom(@PathVariable Integer id) {
         Room room = roomService.findAt(id);
@@ -42,6 +45,7 @@ public class RoomController {
     }
 
     @PostMapping("{id}/update")
+    @PreAuthorize("hasRole('WORKER')")
     @ApiOperation(value = "Обновить комнату по ID", nickname = "Update room")
     @ResponseStatus(value = HttpStatus.OK)
     public void updateRoom(
@@ -52,6 +56,7 @@ public class RoomController {
     }
 
     @PostMapping("{id}/delete")
+    @PreAuthorize("hasRole('WORKER')")
     @ApiOperation(value = "Удалить комнату по ID", nickname = "Delete room")
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteRoom(@PathVariable("id") Integer id) {
@@ -59,6 +64,7 @@ public class RoomController {
     }
 
     @GetMapping("list")
+    @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
     @ApiOperation(value = "Получить все комнаты", nickname = "Get all rooms")
     public List<RoomDto> getAllRooms() {
         List<Room> rooms = roomService.findAll();
@@ -66,6 +72,7 @@ public class RoomController {
     }
 
     @GetMapping("free")
+    @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
     @ApiOperation(value = "Получить свободные комнаты по датам приезда и отъезда", nickname = "Get free rooms")
     public List<RoomDto> getFreeRooms(@RequestParam("startDate")
                                       @DateTimeFormat(pattern="yyyy-MM-dd") Date start,
