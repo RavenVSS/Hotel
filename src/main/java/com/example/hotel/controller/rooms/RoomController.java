@@ -72,8 +72,8 @@ public class RoomController {
     }
 
     @GetMapping("free")
-    @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
-    @ApiOperation(value = "Получить свободные комнаты по датам приезда и отъезда. Доступ: USER || WORKER", nickname = "Get free rooms")
+    @PreAuthorize("permitAll()")
+    @ApiOperation(value = "Получить свободные комнаты по датам приезда и отъезда. Доступ: Для всех", nickname = "Get free rooms")
     public List<RoomDto> getFreeRooms(@RequestParam("startDate")
                                       @DateTimeFormat(pattern="yyyy-MM-dd") Date start,
                                       @RequestParam("endDate")
