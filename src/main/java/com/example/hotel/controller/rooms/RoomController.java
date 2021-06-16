@@ -36,8 +36,8 @@ public class RoomController {
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
-    @ApiOperation(value = "Получить комнату по ID. Доступ: USER || WORKER", nickname = "Get at room")
+    @PreAuthorize("permitAll()")
+    @ApiOperation(value = "Получить комнату по ID. Доступ: Для всех", nickname = "Get at room")
     public RoomDto getAtRoom(@PathVariable Integer id) {
         Room room = roomService.findAt(id);
         RoomDto roomDto = roomMapper.toDto(room);
