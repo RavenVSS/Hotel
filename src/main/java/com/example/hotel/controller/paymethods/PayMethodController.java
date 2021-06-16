@@ -23,7 +23,7 @@ public class PayMethodController {
 
     @GetMapping("list")
     @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
-    @ApiOperation(value = "Получить список методов оплаты", nickname = "Pay Methods")
+    @ApiOperation(value = "Получить список методов оплаты. Доступ: USER || WORKER", nickname = "Pay Methods")
     public List<PayMethodDto> getAllPayMethods() {
         return payMethodMapper.toList(payMethodService.findAll());
     }

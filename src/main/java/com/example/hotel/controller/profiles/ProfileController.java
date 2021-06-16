@@ -23,7 +23,7 @@ public class ProfileController {
 
     @PostMapping("create")
     @PreAuthorize("hasRole('WORKER')")
-    @ApiOperation(value = "Создать новый профиль", nickname = "New profile")
+    @ApiOperation(value = "Создать новый профиль. Доступ: WORKER", nickname = "New profile")
     @ResponseStatus(value = HttpStatus.CREATED)
     public void addNewProfile(@RequestBody ProfileCreateDto profileCreateDto){
         profileService.create(profileMapper.fromDto(profileCreateDto));
@@ -31,7 +31,7 @@ public class ProfileController {
 
     @PostMapping("{id}/update")
     @PreAuthorize("hasRole('WORKER')")
-    @ApiOperation(value = "Обновить профиль по ID", nickname = "Update profile")
+    @ApiOperation(value = "Обновить профиль по ID. Доступ: WORKER", nickname = "Update profile")
     @ResponseStatus(value = HttpStatus.OK)
     public void updateProfile(@RequestBody ProfileCreateDto profileCreateDto,
                               @PathVariable("id") Integer id){
@@ -40,7 +40,7 @@ public class ProfileController {
 
     @PostMapping("{id}/delete")
     @PreAuthorize("hasRole('WORKER')")
-    @ApiOperation(value = "Удалить профиль по ID", nickname = "Delete profile")
+    @ApiOperation(value = "Удалить профиль по ID. Доступ: WORKER", nickname = "Delete profile")
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteProfile(@PathVariable("id") Integer id){
         profileService.delete(id);
@@ -48,7 +48,7 @@ public class ProfileController {
 
     @GetMapping("{id}")
     @PreAuthorize("hasRole('WORKER')")
-    @ApiOperation(value = "Получить профиль по ID", nickname = "Get at profile")
+    @ApiOperation(value = "Получить профиль по ID. Доступ: WORKER", nickname = "Get at profile")
     @ResponseStatus(value = HttpStatus.OK)
     public ProfileDto getAtProfile(@PathVariable("id") Integer id){
         return profileMapper.toDto(profileService.findAt(id));
@@ -56,7 +56,7 @@ public class ProfileController {
 
     @GetMapping("search/{userId}")
     @PreAuthorize("hasRole('WORKER')")
-    @ApiOperation(value = "Найти профиль по ID пользователя", nickname = "Get profile by UserId")
+    @ApiOperation(value = "Найти профиль по ID пользователя. Доступ: WORKER", nickname = "Get profile by UserId")
     @ResponseStatus(value = HttpStatus.OK)
     public ProfileDto getProfileByUserId(@PathVariable("userId") Integer userId){
         return profileMapper.toDto(profileService.findByUserId(userId));
@@ -64,7 +64,7 @@ public class ProfileController {
 
     @GetMapping("current")
     @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
-    @ApiOperation(value = "Получить профиль текущего пользователя", nickname = "Get current profile")
+    @ApiOperation(value = "Получить профиль текущего пользователя. Доступ: USER || WORKER", nickname = "Get current profile")
     @ResponseStatus(value = HttpStatus.OK)
     public ProfileDto getCurrentProfile(){
         return profileMapper.toDto(profileService.findByUserId(authService.getCurrentUserId()));

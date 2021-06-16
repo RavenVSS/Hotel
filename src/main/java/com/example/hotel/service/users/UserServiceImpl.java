@@ -81,4 +81,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public User findByLogin(String login) {
+        return userRepository.findOptionalByLogin(login)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    }
 }

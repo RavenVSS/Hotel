@@ -28,7 +28,7 @@ public class RoomController {
 
     @PostMapping("create")
     @PreAuthorize("hasRole('WORKER')")
-    @ApiOperation(value = "Создать новую комнату", nickname = "New room")
+    @ApiOperation(value = "Создать новую комнату. Доступ: WORKER", nickname = "New room")
     @ResponseStatus(value = HttpStatus.CREATED)
     public void addNewRoom(@RequestBody RoomCreateDto roomCreateDto) {
         RoomCreateArg roomCreateArg = roomMapper.fromDto(roomCreateDto);
@@ -37,7 +37,7 @@ public class RoomController {
 
     @GetMapping("{id}")
     @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
-    @ApiOperation(value = "Получить комнату по ID", nickname = "Get at room")
+    @ApiOperation(value = "Получить комнату по ID. Доступ: USER || WORKER", nickname = "Get at room")
     public RoomDto getAtRoom(@PathVariable Integer id) {
         Room room = roomService.findAt(id);
         RoomDto roomDto = roomMapper.toDto(room);
@@ -46,7 +46,7 @@ public class RoomController {
 
     @PostMapping("{id}/update")
     @PreAuthorize("hasRole('WORKER')")
-    @ApiOperation(value = "Обновить комнату по ID", nickname = "Update room")
+    @ApiOperation(value = "Обновить комнату по ID. Доступ: WORKER", nickname = "Update room")
     @ResponseStatus(value = HttpStatus.OK)
     public void updateRoom(
             @PathVariable("id") Integer roomId,
@@ -57,7 +57,7 @@ public class RoomController {
 
     @PostMapping("{id}/delete")
     @PreAuthorize("hasRole('WORKER')")
-    @ApiOperation(value = "Удалить комнату по ID", nickname = "Delete room")
+    @ApiOperation(value = "Удалить комнату по ID. Доступ: WORKER", nickname = "Delete room")
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteRoom(@PathVariable("id") Integer id) {
         roomService.delete(id);
@@ -65,7 +65,7 @@ public class RoomController {
 
     @GetMapping("list")
     @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
-    @ApiOperation(value = "Получить все комнаты", nickname = "Get all rooms")
+    @ApiOperation(value = "Получить все комнаты. Доступ: USER || WORKER", nickname = "Get all rooms")
     public List<RoomDto> getAllRooms() {
         List<Room> rooms = roomService.findAll();
         return roomMapper.toList(rooms);
@@ -73,7 +73,7 @@ public class RoomController {
 
     @GetMapping("free")
     @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
-    @ApiOperation(value = "Получить свободные комнаты по датам приезда и отъезда", nickname = "Get free rooms")
+    @ApiOperation(value = "Получить свободные комнаты по датам приезда и отъезда. Доступ: USER || WORKER", nickname = "Get free rooms")
     public List<RoomDto> getFreeRooms(@RequestParam("startDate")
                                       @DateTimeFormat(pattern="yyyy-MM-dd") Date start,
                                       @RequestParam("endDate")

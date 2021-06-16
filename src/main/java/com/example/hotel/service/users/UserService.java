@@ -16,4 +16,6 @@ public interface UserService {
     List<User> findAll();
 
     User findAt(Integer UserId);
+
+    User findByLogin(String login);
 }

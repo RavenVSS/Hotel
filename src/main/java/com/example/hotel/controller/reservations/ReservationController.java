@@ -28,11 +28,9 @@ public class ReservationController {
     private final AuthenticationService authService;
     private final ReceiptService receiptService;
 
-    //TODO update reservations current user
-
     @PostMapping("create")
     @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
-    @ApiOperation(value = "Создать новую запись бронирования", nickname = "New reservation")
+    @ApiOperation(value = "Создать новую запись бронирования. Доступ: USER || WORKER", nickname = "New reservation")
     @ResponseStatus(value = HttpStatus.CREATED)
     public void addNewReservation (@RequestBody ReservationCreateDto reservationCreateDto) {
         reservationCreateDto.setWorkerId(authService.getCurrentUserId());
@@ -41,9 +39,10 @@ public class ReservationController {
         reservationService.create(reservationMapper.fromDto(reservationCreateDto));
     }
 
+    //TODO update only for user reservations
     @PostMapping("{id}/update")
-    @PreAuthorize("hasRole('WORKER')")
-    @ApiOperation(value = "Обновить запись бронирования по ID", nickname = "Update reservation")
+    @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
+    @ApiOperation(value = "Обновить запись бронирования по ID. Доступ: USER || WORKER", nickname = "Update reservation")
     @ResponseStatus(value = HttpStatus.OK)
     public void updateReservation (@RequestBody ReservationCreateDto reservationCreateDto,
                                    @PathVariable("id") Integer id) {
@@ -52,7 +51,7 @@ public class ReservationController {
 
     @PostMapping("{id}/delete")
     @PreAuthorize("hasRole('WORKER')")
-    @ApiOperation(value = "Удалить запись бронирования по ID", nickname = "Delete reservation")
+    @ApiOperation(value = "Удалить запись бронирования по ID. Доступ: WORKER", nickname = "Delete reservation")
     @ResponseStatus(value = HttpStatus.OK)
     public void deleteReservation(@PathVariable("id") Integer id) {
         reservationService.delete(id);
@@ -60,7 +59,7 @@ public class ReservationController {
 
     @GetMapping("{id}")
     @PreAuthorize("hasRole('WORKER')")
-    @ApiOperation(value = "Получить запись бронирования по ID", nickname = "Get at reservation")
+    @ApiOperation(value = "Получить запись бронирования по ID. Доступ: WORKER", nickname = "Get at reservation")
     public ReservationDto getAtReservation(@PathVariable("id") Integer id) {
         Reservation reservation = reservationService.findAt(id);
         ReservationDto reservationDto = reservationMapper.toDto(reservation);
@@ -69,14 +68,14 @@ public class ReservationController {
 
     @GetMapping("list")
     @PreAuthorize("hasRole('WORKER')")
-    @ApiOperation(value = "Получить все записи бронирования", nickname = "Get all reservation")
+    @ApiOperation(value = "Получить все записи бронирования. Доступ: WORKER", nickname = "Get all reservation")
     public List<ReservationDto> getAllReservations() {
         return reservationMapper.toList(reservationService.findAll());
     }
 
     @GetMapping("search/name")
     @PreAuthorize("hasRole('WORKER')")
-    @ApiOperation(value = "Получить все записи бронирования по имени и фамилии гостя",
+    @ApiOperation(value = "Получить все записи бронирования по имени и фамилии гостя. Доступ: WORKER",
             nickname = "Get reservations by name")
     public List<ReservationDto> getReservationsByName(@RequestParam("firstName") String firstName,
                                                       @RequestParam("secondName") String secondName) {
@@ -85,7 +84,7 @@ public class ReservationController {
 
     @GetMapping("search/date")
     @PreAuthorize("hasRole('WORKER')")
-    @ApiOperation(value = "Получить все записи бронирования по дате приезда", nickname = "Get reservations by date")
+    @ApiOperation(value = "Получить все записи бронирования по дате приезда. Доступ: WORKER", nickname = "Get reservations by date")
     public List<ReservationDto> getReservationsByDate(@RequestParam("beginDate")
                                                       @DateTimeFormat(pattern="yyyy-MM-dd") Date beginDate) {
         return reservationMapper.toList(reservationService.findByBeginDate(beginDate));
@@ -93,7 +92,7 @@ public class ReservationController {
 
     @GetMapping("current")
     @PreAuthorize("hasRole('USER') || hasRole('WORKER')")
-    @ApiOperation(value = "Получить все записи бронирования текущего пользователя", nickname = "Get reservations current user")
+    @ApiOperation(value = "Получить все записи бронирования текущего пользователя. Доступ: USER || WORKER", nickname = "Get reservations current user")
     public List<ReservationDto> getReservationsCurrentUser() {
         return reservationMapper.toList(reservationService.findByGuestId(authService.getCurrentUserId()));
     }
