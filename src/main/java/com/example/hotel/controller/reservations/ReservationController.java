@@ -39,7 +39,7 @@ public class ReservationController {
         reservationService.create(reservationMapper.fromDto(reservationCreateDto));
     }
 
-    //TODO update only for user reservations
+    //TODO update only for the current user
     @PostMapping("{id}/update")
     @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
     @ApiOperation(value = "Обновить запись бронирования по ID. Доступ: USER || WORKER", nickname = "Update reservation")

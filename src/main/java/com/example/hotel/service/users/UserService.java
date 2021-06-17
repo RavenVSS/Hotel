@@ -18,4 +18,6 @@ public interface UserService {
     User findAt(Integer UserId);
 
     User findByLogin(String login);
+
+    void confirm(String hash, Integer userId);
 }

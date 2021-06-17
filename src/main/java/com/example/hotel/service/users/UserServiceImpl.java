@@ -6,18 +6,21 @@ import com.example.hotel.model.users.User;
 import com.example.hotel.model.users.UserCreateArg;
 import com.example.hotel.model.users.UserTypes;
 import com.example.hotel.repository.users.UserRepository;
+import com.example.hotel.service.email.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
     @Override
     @Transactional
@@ -27,18 +30,21 @@ public class UserServiceImpl implements UserService {
             throw new LoginIsNotFreeException("Login is not free");
         }
 
-        userRepository.save(User.builder()
+        User user = userRepository.save(User.builder()
                 .login(arg.getLogin())
                 .password(arg.getPassword())
                 .email(arg.getEmail())
                 .phone(arg.getPhone())
                 .salt("0")
+                .cookie(UUID.randomUUID().toString())
                 .regDate(new Date())
                 .type(UserTypes.ROLE_USER)
                 .firstName(arg.getFirstName())
                 .secondName(arg.getSecondName())
                 .middleName(arg.getMiddleName())
                 .build());
+
+        emailService.sendConfirm(user);
     }
 
     @Override
@@ -87,5 +93,16 @@ public class UserServiceImpl implements UserService {
     public User findByLogin(String login) {
         return userRepository.findOptionalByLogin(login)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    }
+
+    @Override
+    public void confirm(String hash, Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        String userHash = user.getCookie();
+        if (userHash.equals(hash)) {
+            //TODO confirmed
+        } else throw new EntityNotFoundException("Hash error");
     }
 }
