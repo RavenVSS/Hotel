@@ -43,8 +43,8 @@ public class EmailServiceImpl implements EmailService {
 
         message.setTo(user.getEmail());
         message.setSubject("Добро пожаловать в гостиницу!");
-        message.setText("Здравствуйте, вы были зарегистрированны на сайте гостиницы! \b Ваш логин:" + user.getLogin()+
-                " Ваш пароль: " + user.getPassword());
+        message.setText("Здравствуйте, вы были зарегистрированны на сайте гостиницы! \nВаш логин: " + user.getLogin()+
+                " \nВаш пароль: " + user.getPassword());
 
         this.emailSender.send(message);
     }
