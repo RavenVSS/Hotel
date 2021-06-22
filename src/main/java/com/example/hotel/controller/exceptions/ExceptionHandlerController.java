@@ -4,10 +4,13 @@ import com.example.hotel.controller.exceptions.dto.ErrorDto;
 import com.example.hotel.exceptions.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.MailSendException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import javax.mail.SendFailedException;
 
 @ControllerAdvice
 public class ExceptionHandlerController {
@@ -24,6 +27,13 @@ public class ExceptionHandlerController {
     @ResponseBody
     public ErrorDto handleConflict() {
         return new ErrorDto("Error query");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MailSendException.class)
+    @ResponseBody
+    public ErrorDto handleConflictMail() {
+        return new ErrorDto("Invalid mail");
     }
 }
 

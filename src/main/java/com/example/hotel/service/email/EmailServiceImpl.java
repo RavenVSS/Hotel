@@ -7,13 +7,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import java.util.Properties;
-
 @Service
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
@@ -43,8 +36,7 @@ public class EmailServiceImpl implements EmailService {
 
         message.setTo(user.getEmail());
         message.setSubject("Добро пожаловать в гостиницу!");
-        message.setText("Здравствуйте, вы были зарегистрированны на сайте гостиницы! \nВаш логин: " + user.getLogin()+
-                " \nВаш пароль: " + user.getPassword());
+        message.setText("Здравствуйте, вы были зарегистрированны на сайте гостиницы! \nВаш логин: " + user.getLogin());
 
         this.emailSender.send(message);
     }

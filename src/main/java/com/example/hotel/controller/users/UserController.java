@@ -47,7 +47,7 @@ public class UserController {
 
     @GetMapping("{id}/sendPassword")
     @PreAuthorize("hasRole('WORKER')")
-    @ApiOperation(value = "Отправить логин и пароль пользователю на Email. Доступ: WORKER", nickname = "Send password for user")
+    @ApiOperation(value = "Отправить логин пользователю на Email. Доступ: WORKER", nickname = "Send password for user")
     @ResponseStatus(value = HttpStatus.OK)
     public void sendPassword(@PathVariable("id") Integer userId) {
         emailService.sendUserData(userService.findAt(userId));
