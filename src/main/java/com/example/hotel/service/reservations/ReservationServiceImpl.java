@@ -1,10 +1,14 @@
 package com.example.hotel.service.reservations;
 
 import com.example.hotel.exceptions.EntityNotFoundException;
+import com.example.hotel.exceptions.NoAccessException;
 import com.example.hotel.model.reservations.ActualStatus;
 import com.example.hotel.model.reservations.Reservation;
 import com.example.hotel.model.reservations.ReservationCreateArg;
+import com.example.hotel.model.users.User;
+import com.example.hotel.model.users.UserTypes;
 import com.example.hotel.repository.reservations.ReservationRepository;
+import com.example.hotel.service.authentication.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +21,7 @@ import java.util.List;
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final AuthenticationService authService;
 
     @Override
     @Transactional
@@ -45,9 +50,14 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public void update(ReservationCreateArg reservationCreateArg, Integer id) {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
+
+        User user = authService.getCurrentUser();
+        if(user.getType() == UserTypes.ROLE_USER && !reservation.getGuestId().equals(user.getId()))
+            throw new NoAccessException("Access is denied for this reservation");
 
         reservation.setRoomId(reservationCreateArg.getRoomId());
         reservation.setActualStatus(reservationCreateArg.getActualStatus());
@@ -75,9 +85,8 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional(readOnly = true)
     public Reservation findAt(Integer id) {
-        Reservation reservation = reservationRepository.findById(id)
+        return reservationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
-        return reservation;
     }
 
     @Override

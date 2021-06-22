@@ -1,4 +1,4 @@
-package com.example.hotel.config;
+package com.example.hotel.config.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +9,9 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -29,11 +31,6 @@ class OAuthConfig extends AuthorizationServerConfigurerAdapter {
     private String clientId;
     @Value("${app.client.secret}")
     private String clientSecret;
-
-    @Bean
-    public static NoOpPasswordEncoder passwordEncoder() {
-        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
-    }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {

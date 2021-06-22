@@ -1,6 +1,7 @@
 package com.example.hotel.service.authentication;
 
 import com.example.hotel.model.users.User;
+import com.example.hotel.model.users.UserTypes;
 import com.example.hotel.service.users.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,5 +25,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String login =
                 SecurityContextHolder.getContext().getAuthentication().getName();
         return userService.findByLogin(login);
+    }
+
+    @Override
+    public UserTypes getCurrentRole() {
+        String login =
+                SecurityContextHolder.getContext().getAuthentication().getName();
+        return userService.findByLogin(login).getType();
     }
 }

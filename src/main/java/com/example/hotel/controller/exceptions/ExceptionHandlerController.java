@@ -35,5 +35,12 @@ public class ExceptionHandlerController {
     public ErrorDto handleConflictMail() {
         return new ErrorDto("Invalid mail");
     }
+
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    @ExceptionHandler(NoAccessException.class)
+    @ResponseBody
+    public ErrorDto handleConflictAccess(Exception ex) {
+        return new ErrorDto(ex.getLocalizedMessage());
+    }
 }
 

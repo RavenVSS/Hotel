@@ -39,7 +39,6 @@ public class ReservationController {
         reservationService.create(reservationMapper.fromDto(reservationCreateDto));
     }
 
-    //TODO update only for the current user
     @PostMapping("{id}/update")
     @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
     @ApiOperation(value = "Обновить запись бронирования по ID. Доступ: USER || WORKER", nickname = "Update reservation")
@@ -91,8 +90,8 @@ public class ReservationController {
     }
 
     @GetMapping("current")
-    @PreAuthorize("hasRole('USER') || hasRole('WORKER')")
-    @ApiOperation(value = "Получить все записи бронирования текущего пользователя. Доступ: USER || WORKER", nickname = "Get reservations current user")
+    @PreAuthorize("hasRole('USER')")
+    @ApiOperation(value = "Получить все записи бронирования текущего пользователя. Доступ: USER", nickname = "Get reservations current user")
     public List<ReservationDto> getReservationsCurrentUser() {
         return reservationMapper.toList(reservationService.findByGuestId(authService.getCurrentUserId()));
     }

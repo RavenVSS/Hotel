@@ -22,7 +22,7 @@ public class SwaggerConfig {
 
     @Value("${app.client.id}")
     private String clientId;
-    @Value("${app.client.secret}")
+    @Value("${app.client.swagger.secret}")
     private String clientSecret;
 
     @Bean

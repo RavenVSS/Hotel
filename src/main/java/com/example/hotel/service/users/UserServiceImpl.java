@@ -8,6 +8,7 @@ import com.example.hotel.model.users.UserTypes;
 import com.example.hotel.repository.users.UserRepository;
 import com.example.hotel.service.email.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -32,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.save(User.builder()
                 .login(arg.getLogin())
-                .password(arg.getPassword())
+                .password(passwordEncoder.encode(arg.getPassword()))
                 .email(arg.getEmail())
                 .phone(arg.getPhone())
                 .salt("0")
