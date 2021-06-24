@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void create(UserCreateArg arg) {
+    public User create(UserCreateArg arg) {
 
         if (userRepository.findOptionalByLogin(arg.getLogin()).isPresent()) {
             throw new LoginIsNotFreeException("Login is not free");
@@ -47,6 +47,7 @@ public class UserServiceImpl implements UserService {
                 .build());
 
         emailService.sendConfirm(user);
+        return user;
     }
 
     @Override
@@ -95,6 +96,13 @@ public class UserServiceImpl implements UserService {
     public User findByLogin(String login) {
         return userRepository.findOptionalByLogin(login)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    }
+
+    @Override
+    public List<User> findByName(String firstName, String secondName) {
+        List<User> users = userRepository.findByName(firstName, secondName);
+        if(users.isEmpty()) throw new EntityNotFoundException("Users not found");
+        return users;
     }
 
     @Override

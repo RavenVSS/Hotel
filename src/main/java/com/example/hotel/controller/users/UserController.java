@@ -2,7 +2,6 @@ package com.example.hotel.controller.users;
 
 import com.example.hotel.controller.users.dto.in.UserCreateDto;
 import com.example.hotel.controller.users.dto.out.UserDto;
-import com.example.hotel.model.users.User;
 import com.example.hotel.model.users.UserCreateArg;
 import com.example.hotel.service.authentication.AuthenticationServiceImpl;
 import com.example.hotel.service.email.EmailService;
@@ -15,7 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "users", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -60,5 +59,30 @@ public class UserController {
     public void confirmEmail(@RequestParam("hash") String hash,
                              @RequestParam("id") Integer id) {
         userService.confirm(hash, id);
+    }
+
+    @GetMapping("{id}")
+    @ApiOperation(value = "Данные о пользователе по ID. Доступ: WORKER", nickname = "Get user")
+    @PreAuthorize("hasRole('WORKER')")
+    @ResponseStatus(value = HttpStatus.OK)
+    public UserDto getAtUser(@PathVariable("id") Integer id) {
+        return userMapper.toDto(userService.findAt(id));
+    }
+
+    @GetMapping("search/name")
+    @ApiOperation(value = "Поиск пользователя по имени и фамилии. Доступ: WORKER", nickname = "Get user by name")
+    @PreAuthorize("hasRole('WORKER')")
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<UserDto> getUserByName(@RequestParam("firstName") String firstName,
+                                       @RequestParam("secondName") String secondName) {
+        return userMapper.toList(userService.findByName(firstName, secondName));
+    }
+
+    @GetMapping("search/login")
+    @ApiOperation(value = "Поиск пользователя по логину. Доступ: WORKER", nickname = "Get user by login")
+    @PreAuthorize("hasRole('WORKER')")
+    @ResponseStatus(value = HttpStatus.OK)
+    public UserDto getUserByName(@RequestParam("login") String login) {
+        return userMapper.toDto(userService.findByLogin(login));
     }
 }

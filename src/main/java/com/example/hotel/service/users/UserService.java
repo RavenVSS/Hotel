@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserService {
 
-    void create(UserCreateArg arg);
+    User create(UserCreateArg arg);
 
     void update(UserCreateArg arg, Integer userId);
 
@@ -18,6 +18,8 @@ public interface UserService {
     User findAt(Integer UserId);
 
     User findByLogin(String login);
+
+    List<User> findByName(String firstName, String secondName);
 
     void confirm(String hash, Integer userId);
 }
