@@ -1,5 +1,6 @@
 package com.example.hotel.service.authentication;
 
+import com.example.hotel.config.security.UserCustom;
 import com.example.hotel.model.users.User;
 import com.example.hotel.model.users.UserTypes;
 import com.example.hotel.service.users.UserService;
@@ -15,22 +16,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public Integer getCurrentUserId() {
-        String login =
-                SecurityContextHolder.getContext().getAuthentication().getName();
-        return userService.findByLogin(login).getId();
+        UserCustom userCustom = (UserCustom)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userCustom.getUserId();
     }
 
     @Override
     public User getCurrentUser() {
-        String login =
-                SecurityContextHolder.getContext().getAuthentication().getName();
-        return userService.findByLogin(login);
+        UserCustom userCustom = (UserCustom)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userService.findAt(userCustom.getUserId());
     }
 
     @Override
     public UserTypes getCurrentRole() {
-        String login =
-                SecurityContextHolder.getContext().getAuthentication().getName();
-        return userService.findByLogin(login).getType();
+        UserCustom userCustom = (UserCustom)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userCustom.getType();
     }
 }

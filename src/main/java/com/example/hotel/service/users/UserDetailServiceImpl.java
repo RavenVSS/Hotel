@@ -1,10 +1,10 @@
 package com.example.hotel.service.users;
 
+import com.example.hotel.config.security.UserCustom;
 import com.example.hotel.exceptions.EntityNotFoundException;
 import com.example.hotel.repository.users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,8 +24,10 @@ class UserDetailServiceImpl implements UserDetailsService {
         com.example.hotel.model.users.User user = userRepository.findOptionalByLogin(userName)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        return new User(user.getLogin(),
+        return new UserCustom(user.getLogin(),
                 user.getPassword(),
-                AuthorityUtils.createAuthorityList(user.getType().name()));
+                AuthorityUtils.createAuthorityList(user.getType().name()),
+                user.getId(),
+                user.getType());
     }
 }
