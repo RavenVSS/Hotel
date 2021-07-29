@@ -1,14 +1,17 @@
 package com.example.hotel.controller.reservations;
 
+import com.example.hotel.command.reservations.CreateReservationCommand;
 import com.example.hotel.controller.reservations.dto.in.ReservationCreateDto;
 import com.example.hotel.controller.reservations.dto.out.ReservationDto;
 import com.example.hotel.model.reservations.Reservation;
+import com.example.hotel.model.reservations.ReservationCreateArg;
 import com.example.hotel.service.authentication.AuthenticationService;
-import com.example.hotel.service.receipt.ReceiptService;
+import com.example.hotel.service.command.CommandService;
 import com.example.hotel.service.reservations.ReservationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,18 +28,19 @@ public class ReservationController {
 
     private final ReservationService reservationService;
     private final ReservationMapper reservationMapper;
-    private final AuthenticationService authService;
-    private final ReceiptService receiptService;
+    private final CommandService commandService;
+    private final ApplicationContext applicationContext;
+
+    //TODO delete
+    private AuthenticationService authService;
 
     @PostMapping("create")
     @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
     @ApiOperation(value = "Создать новую запись бронирования. Доступ: USER || WORKER", nickname = "New reservation")
     @ResponseStatus(value = HttpStatus.CREATED)
     public void addNewReservation (@RequestBody ReservationCreateDto reservationCreateDto) {
-        reservationCreateDto.setWorkerId(authService.getCurrentUserId());
-        reservationCreateDto.setReceipt(receiptService.getReceipt(reservationCreateDto.getGuestId(),
-                reservationCreateDto.getRoomId()));
-        reservationService.create(reservationMapper.fromDto(reservationCreateDto));
+        ReservationCreateArg reservationCreateArg = reservationMapper.fromDto(reservationCreateDto);
+        commandService.execute(new CreateReservationCommand(reservationCreateArg, applicationContext));
     }
 
     @PostMapping("{id}/update")
