@@ -55,4 +55,8 @@ public class User {
     @Column(name = "middle_name")
     private String middleName;
 
+    @PrePersist
+    public void setDataReg() {
+        regDate = new Date();
+    }
 }

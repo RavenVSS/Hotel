@@ -39,14 +39,14 @@ public class UserServiceImpl implements UserService {
                 .phone(arg.getPhone())
                 .salt("0")
                 .cookie(UUID.randomUUID().toString())
-                .regDate(new Date())
                 .type(UserTypes.ROLE_USER)
                 .firstName(arg.getFirstName())
                 .secondName(arg.getSecondName())
                 .middleName(arg.getMiddleName())
                 .build());
 
-        emailService.sendConfirm(user);
+        //TODO uncomment for deploy
+        //emailService.sendConfirm(user);
         return user;
     }
 
