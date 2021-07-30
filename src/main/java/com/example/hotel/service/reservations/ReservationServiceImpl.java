@@ -3,11 +3,13 @@ package com.example.hotel.service.reservations;
 import com.example.hotel.exceptions.EntityNotFoundException;
 import com.example.hotel.exceptions.NoAccessException;
 import com.example.hotel.model.reservations.ActualStatus;
+import com.example.hotel.model.reservations.PayStatus;
 import com.example.hotel.model.reservations.Reservation;
 import com.example.hotel.model.reservations.ReservationCreateArg;
 import com.example.hotel.model.users.User;
 import com.example.hotel.model.users.UserTypes;
 import com.example.hotel.repository.reservations.ReservationRepository;
+import com.example.hotel.schedules.ScheduledPaymentsTasks;
 import com.example.hotel.service.authentication.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,11 +24,12 @@ public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final AuthenticationService authService;
+    private final ScheduledPaymentsTasks paymentsTasks;
 
     @Override
     @Transactional
     public void create(ReservationCreateArg reservationCreateArg) {
-        reservationRepository.save(Reservation.builder()
+        Reservation reservation = reservationRepository.save(Reservation.builder()
             .roomId(reservationCreateArg.getRoomId())
             .actualStatus(ActualStatus.ACTUAL)
             .receipt(reservationCreateArg.getReceipt())
@@ -39,6 +42,9 @@ public class ReservationServiceImpl implements ReservationService {
             .comment(reservationCreateArg.getComment())
             .paymentMethodId(reservationCreateArg.getPaymentMethodId())
             .build());
+
+        if (reservation.getPaymentMethodId() == 2)
+            paymentsTasks.addReservationPayment(reservation.getId());
     }
 
     @Override
@@ -112,4 +118,14 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationList;
     }
 
+    @Override
+    public void checkPaymentById(Integer id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
+
+        if (reservation.getPayStatus() == PayStatus.NOT_PAID) {
+            reservation.setActualStatus(ActualStatus.REJECTED);
+            reservationRepository.save(reservation);
+        }
+    }
 }

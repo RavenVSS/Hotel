@@ -23,4 +23,6 @@ public interface ReservationService {
     List<Reservation> findByName(String firstName, String secondName);
 
     List<Reservation> findByGuestId(Integer guestId);
+
+    void checkPaymentById(Integer id);
 }
