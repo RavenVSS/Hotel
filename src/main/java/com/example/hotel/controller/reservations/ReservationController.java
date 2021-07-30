@@ -1,12 +1,11 @@
 package com.example.hotel.controller.reservations;
 
 import com.example.hotel.command.reservations.CreateReservationCommand;
+import com.example.hotel.command.reservations.GetReservationsCurrentUserCommand;
 import com.example.hotel.controller.reservations.dto.in.ReservationCreateDto;
 import com.example.hotel.controller.reservations.dto.out.ReservationDto;
 import com.example.hotel.model.reservations.Reservation;
 import com.example.hotel.model.reservations.ReservationCreateArg;
-import com.example.hotel.service.authentication.AuthenticationService;
-import com.example.hotel.service.command.CommandService;
 import com.example.hotel.service.reservations.ReservationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,11 +27,7 @@ public class ReservationController {
 
     private final ReservationService reservationService;
     private final ReservationMapper reservationMapper;
-    private final CommandService commandService;
     private final ApplicationContext applicationContext;
-
-    //TODO delete
-    private AuthenticationService authService;
 
     @PostMapping("create")
     @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
@@ -40,7 +35,7 @@ public class ReservationController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public void addNewReservation (@RequestBody ReservationCreateDto reservationCreateDto) {
         ReservationCreateArg reservationCreateArg = reservationMapper.fromDto(reservationCreateDto);
-        commandService.execute(new CreateReservationCommand(reservationCreateArg, applicationContext));
+        new CreateReservationCommand(applicationContext).execute(reservationCreateArg);
     }
 
     @PostMapping("{id}/update")
@@ -97,6 +92,6 @@ public class ReservationController {
     @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "Получить все записи бронирования текущего пользователя. Доступ: USER", nickname = "Get reservations current user")
     public List<ReservationDto> getReservationsCurrentUser() {
-        return reservationMapper.toList(reservationService.findByGuestId(authService.getCurrentUserId()));
+        return reservationMapper.toList(new GetReservationsCurrentUserCommand(applicationContext).execute(null));
     }
 }

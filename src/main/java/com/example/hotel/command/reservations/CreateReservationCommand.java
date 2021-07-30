@@ -7,30 +7,24 @@ import com.example.hotel.service.receipt.ReceiptService;
 import com.example.hotel.service.reservations.ReservationService;
 import org.springframework.context.ApplicationContext;
 
-public class CreateReservationCommand implements Command {
+public class CreateReservationCommand implements Command<ReservationCreateArg, Void> {
 
     private final AuthenticationService authService;
     private final ReceiptService receiptService;
     private final ReservationService reservationService;
-    private ReservationCreateArg reservationCreateArg;
 
-    public CreateReservationCommand(ReservationCreateArg reservationCreateArg, ApplicationContext applicationContext) {
-        this.reservationCreateArg = reservationCreateArg;
+    public CreateReservationCommand(ApplicationContext applicationContext) {
         authService = applicationContext.getBean(AuthenticationService.class);
         receiptService = applicationContext.getBean(ReceiptService.class);
         reservationService = applicationContext.getBean(ReservationService.class);
     }
 
     @Override
-    public void execute() {
+    public Void execute(ReservationCreateArg reservationCreateArg) {
         reservationCreateArg.setWorkerId(authService.getCurrentUserId());
         reservationCreateArg.setReceipt(receiptService.getReceipt(reservationCreateArg.getGuestId(),
                 reservationCreateArg.getRoomId()));
         reservationService.create(reservationCreateArg);
-    }
-
-    @Override
-    public void undo() {
-        //TODO add delete reservation
+        return null;
     }
 }
