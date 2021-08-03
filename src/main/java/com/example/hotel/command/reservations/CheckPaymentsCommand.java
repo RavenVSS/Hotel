@@ -2,19 +2,18 @@ package com.example.hotel.command.reservations;
 
 import com.example.hotel.command.core.Command;
 import com.example.hotel.service.reservations.ReservationService;
-import org.springframework.context.ApplicationContext;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-public class CheckPaymentsCommand implements Command<Integer, Void> {
+@Component
+@RequiredArgsConstructor
+public class CheckPaymentsCommand implements Command<Void, Void> {
 
     private final ReservationService reservationService;
 
-    public CheckPaymentsCommand(ApplicationContext applicationContext) {
-        reservationService = applicationContext.getBean(ReservationService.class);
-    }
-
     @Override
-    public Void execute(Integer reservationId) {
-        reservationService.checkPaymentById(reservationId);
+    public Void execute(Void unused) {
+        reservationService.checkPayments();
         return null;
     }
 }

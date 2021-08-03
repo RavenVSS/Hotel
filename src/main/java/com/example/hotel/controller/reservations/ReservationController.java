@@ -10,7 +10,6 @@ import com.example.hotel.service.reservations.ReservationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationContext;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +26,9 @@ public class ReservationController {
 
     private final ReservationService reservationService;
     private final ReservationMapper reservationMapper;
-    private final ApplicationContext applicationContext;
+
+    private final GetReservationsCurrentUserCommand getReservationsCurrentUserCommand;
+    private final CreateReservationCommand createReservationCommand;
 
     @PostMapping("create")
     @PreAuthorize("hasRole('WORKER') || hasRole('USER')")
@@ -35,7 +36,7 @@ public class ReservationController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public void addNewReservation (@RequestBody ReservationCreateDto reservationCreateDto) {
         ReservationCreateArg reservationCreateArg = reservationMapper.fromDto(reservationCreateDto);
-        new CreateReservationCommand(applicationContext).execute(reservationCreateArg);
+        createReservationCommand.execute(reservationCreateArg);
     }
 
     @PostMapping("{id}/update")
@@ -92,6 +93,6 @@ public class ReservationController {
     @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "Получить все записи бронирования текущего пользователя. Доступ: USER", nickname = "Get reservations current user")
     public List<ReservationDto> getReservationsCurrentUser() {
-        return reservationMapper.toList(new GetReservationsCurrentUserCommand(applicationContext).execute(null));
+        return reservationMapper.toList(getReservationsCurrentUserCommand.execute(null));
     }
 }
