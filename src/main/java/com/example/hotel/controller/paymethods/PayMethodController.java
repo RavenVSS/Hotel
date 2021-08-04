@@ -5,6 +5,7 @@ import com.example.hotel.service.paymethods.PayMethodService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +22,8 @@ public class PayMethodController {
     private final PayMethodMapper payMethodMapper;
 
     @GetMapping("list")
-    @ApiOperation(value = "Получить список методов оплаты", nickname = "Pay Methods")
+    @PreAuthorize("permitAll()")
+    @ApiOperation(value = "Получить список методов оплаты. Доступ: Для всех", nickname = "Pay Methods")
     public List<PayMethodDto> getAllPayMethods() {
         return payMethodMapper.toList(payMethodService.findAll());
     }

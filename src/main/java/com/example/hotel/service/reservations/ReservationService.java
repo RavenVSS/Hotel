@@ -5,6 +5,7 @@ import com.example.hotel.model.reservations.ReservationCreateArg;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface ReservationService {
 
@@ -21,4 +22,8 @@ public interface ReservationService {
     List<Reservation> findByBeginDate(Date beginDate);
 
     List<Reservation> findByName(String firstName, String secondName);
+
+    List<Reservation> findByGuestId(Integer guestId);
+
+    void checkPayments();
 }

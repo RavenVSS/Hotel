@@ -1,27 +1,34 @@
 package com.example.hotel.service.reservations;
 
 import com.example.hotel.exceptions.EntityNotFoundException;
+import com.example.hotel.exceptions.NoAccessException;
 import com.example.hotel.model.reservations.ActualStatus;
+import com.example.hotel.model.reservations.PayStatus;
 import com.example.hotel.model.reservations.Reservation;
 import com.example.hotel.model.reservations.ReservationCreateArg;
+import com.example.hotel.model.users.User;
+import com.example.hotel.model.users.UserTypes;
 import com.example.hotel.repository.reservations.ReservationRepository;
+import com.example.hotel.service.authentication.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final AuthenticationService authService;
+
+    private final Map<Integer, Date> startPaymentsReservation = new HashMap<>();
 
     @Override
     @Transactional
     public void create(ReservationCreateArg reservationCreateArg) {
-        reservationRepository.save(Reservation.builder()
+        Reservation reservation = reservationRepository.save(Reservation.builder()
             .roomId(reservationCreateArg.getRoomId())
             .actualStatus(ActualStatus.ACTUAL)
             .receipt(reservationCreateArg.getReceipt())
@@ -34,6 +41,9 @@ public class ReservationServiceImpl implements ReservationService {
             .comment(reservationCreateArg.getComment())
             .paymentMethodId(reservationCreateArg.getPaymentMethodId())
             .build());
+
+        if (reservation.getPaymentMethodId() == 2)
+            startPaymentsReservation.put(reservation.getId(), new Date());
     }
 
     @Override
@@ -45,9 +55,14 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public void update(ReservationCreateArg reservationCreateArg, Integer id) {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
+
+        User user = authService.getCurrentUser();
+        if(user.getType() == UserTypes.ROLE_USER && !reservation.getGuestId().equals(user.getId()))
+            throw new NoAccessException("Access is denied for this reservation");
 
         reservation.setRoomId(reservationCreateArg.getRoomId());
         reservation.setActualStatus(reservationCreateArg.getActualStatus());
@@ -75,9 +90,8 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional(readOnly = true)
     public Reservation findAt(Integer id) {
-        Reservation reservation = reservationRepository.findById(id)
+        return reservationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
-        return reservation;
     }
 
     @Override
@@ -96,4 +110,34 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationList;
     }
 
+    @Override
+    public List<Reservation> findByGuestId(Integer guestId) {
+        List<Reservation> reservationList = reservationRepository.findByGuestId(guestId);
+        if (reservationList.isEmpty()) throw new EntityNotFoundException("Reservation not found");
+        return reservationList;
+    }
+
+    @Override
+    public void checkPayments() {
+        if (!startPaymentsReservation.isEmpty()) {
+            List<Integer> removeList = new ArrayList<>();
+            startPaymentsReservation.forEach((reservationId, date) -> {
+                if ((new Date().getTime() - date.getTime())/60000 >= 1) {
+
+                    Reservation reservation = reservationRepository.findById(reservationId)
+                            .orElseThrow(() -> new EntityNotFoundException("Reservation not found"));
+
+                    if (reservation.getPayStatus() == PayStatus.NOT_PAID) {
+                        reservation.setActualStatus(ActualStatus.REJECTED);
+                        reservationRepository.save(reservation);
+                    }
+                    removeList.add(reservationId);
+                }
+            });
+
+            for (Integer reservationId: removeList) {
+                startPaymentsReservation.remove(reservationId);
+            }
+        }
+    }
 }

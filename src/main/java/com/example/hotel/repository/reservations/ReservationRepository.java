@@ -15,4 +15,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
             "where guest_id in (SELECT user_id FROM users " +
             "where first_name = :firstName AND second_name = :secondName)", nativeQuery = true)
     List<Reservation> findByName(String firstName, String secondName);
+
+    @Query(value = "SELECT * FROM reservation WHERE guest_id = :guestId", nativeQuery = true)
+    List<Reservation> findByGuestId(Integer guestId);
 }
