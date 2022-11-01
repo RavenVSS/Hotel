@@ -5,16 +5,7 @@ on:
     types: [ opened ]
 
 jobs:
-  branch-labeler:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: TimonVS/pr-labeler-action@v3
-        with:
-          configuration-path: .github/branch-labeler.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   file-labeler:
-    needs: branch-labeler
     permissions:
       contents: read
       pull-requests: write
@@ -24,3 +15,12 @@ jobs:
         with:
           configuration-path: .github/file-labeler.yml
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+  branch-labeler:
+    needs: file-labeler
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: TimonVS/pr-labeler-action@v3
+        with:
+          configuration-path: .github/branch-labeler.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

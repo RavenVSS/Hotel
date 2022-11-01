@@ -1,8 +1,6 @@
 name: "Verify labels in PR"
 
 on:
-  pull_request:
-    types: [opened, labeled, unlabeled, synchronize]
   workflow_run:
     workflows: [ "Auto-assign themes to PR" ]
     types:
