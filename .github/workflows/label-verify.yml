@@ -5,8 +5,9 @@ on:
     types: [opened, labeled, unlabeled, synchronize]
 
 jobs:
-  triage:
-    runs-on: ubuntu-latest
+  label-verify:
+    needs: update-draft-release
+    runs-on: ubuntu-20.04
     steps:
       - uses: zwaldowski/match-label-action@v4
         with:

@@ -4,13 +4,15 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    types: [ opened, reopened, synchronize ]
 
 jobs:
-  update_draft_release:
+  update-draft-release:
     permissions:
       contents: write
-      pull-requests: read
-    runs-on: ubuntu-18.04
+      pull-requests: write
+    runs-on: ubuntu-20.04
     steps:
       - uses: release-drafter/release-drafter@v5
         env:

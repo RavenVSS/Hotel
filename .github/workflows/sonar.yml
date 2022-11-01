@@ -9,11 +9,11 @@ on:
 
 jobs:
   sonarcloud:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
         with:
-          # Shallow clones should be disabled for a better relevancy of analysis
+#         Shallow clones should be disabled for a better relevancy of analysis
           fetch-depth: 0
       - name: Set up JDK
         uses: actions/setup-java@v3
@@ -24,5 +24,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        #       run sonar maven plugin:
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=RavenVSS_Hotel -Dsonar.organization=ravenvss -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.coverage.jacoco.xmlReportPaths=./target/site/jacoco/jacoco.xml
+#       run sonar maven plugin:
+        run: mvn -B verify sonar:sonar -Dsonar.projectKey=RavenVSS_Hotel -Dsonar.organization=ravenvss -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.coverage.jacoco.xmlReportPaths=./target/site/jacoco/jacoco.xml

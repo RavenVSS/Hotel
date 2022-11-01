@@ -1,5 +1,5 @@
-name-template: '$NEXT_PATCH_VERSIONv'
-tag-template: '$NEXT_PATCH_VERSIONv'
+name-template: 'Release $NEXT_PATCH_VERSION'
+tag-template: 'v$NEXT_PATCH_VERSION'
 
 categories:
   - title: '🚀 New Features'
@@ -19,3 +19,34 @@ change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 template: |
   ## Changes
   $CHANGES
+
+autolabeler:
+  - label: 'type:build'
+    files:
+      - ".github/**"
+      - "pom.xml"
+      - ".travis.yml"
+      - ".gitignore"
+      - "Dockerfile"
+      - ".codecov.yml"
+  - label: 'type:features'
+    files:
+      - "src/main/*"
+    branch:
+      - '/feature\/.+/'
+  - label: 'type:fix'
+    branch:
+      - '/fix\/.+/'
+    title:
+      - '/fix/i'
+  - label: 'type:tests'
+    files:
+      - "src/test/*"
+  - label: 'type:documentation'
+    files:
+      - '*.md'
+      - "docs/**"
+  - label: "type:trash"
+    files:
+      - ".idea/**"
+      - "target/**"
