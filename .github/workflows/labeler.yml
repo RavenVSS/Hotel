@@ -21,9 +21,9 @@ jobs:
     steps:
       - uses: TimonVS/pr-labeler-action@v3
         with:
-          configuration-path: ./.github/branch-labeler.yml
+          configuration-path: .github/branch-labeler.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   label-verify:
     needs: branch-labeler
-    uses: .github/workflows/label-verify.yml
+    uses: ./.github/workflows/label-verify.yml
