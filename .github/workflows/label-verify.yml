@@ -6,7 +6,6 @@ on:
 
 jobs:
   label-verify:
-    needs: pr-labeler
     runs-on: ubuntu-20.04
     steps:
       - uses: zwaldowski/match-label-action@v4
