@@ -25,4 +25,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   label-verify:
+    needs: branch-labeler
     uses: .github/workflows/label-verify.yml
