@@ -1,37 +1,6 @@
 name-template: 'Release $NEXT_PATCH_VERSION'
 tag-template: 'v$NEXT_PATCH_VERSION'
 
-autolabeler:
-  - label: 'type:build'
-    files:
-      - ".github/**"
-      - "pom.xml"
-      - ".travis.yml"
-      - ".gitignore"
-      - "Dockerfile"
-      - ".codecov.yml"
-  - label: 'type:features'
-    files:
-      - "src/main/*"
-    branch:
-      - '/feature\/.+/'
-  - label: 'type:fix'
-    branch:
-      - '/fix\/.+/'
-    title:
-      - '/fix/i'
-  - label: 'type:tests'
-    files:
-      - "src/test/*"
-  - label: 'type:documentation'
-    files:
-      - '*.md'
-      - "docs/**"
-  - label: "type:trash"
-    files:
-      - ".idea/**"
-      - "target/**"
-
 categories:
   - title: '🚀 New Features'
     labels:
