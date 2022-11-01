@@ -2,7 +2,7 @@ name: Auto-assign themes to PR
 
 on:
   pull_request:
-    types: [ opened ]
+    types: [ opened, reopened ]
 
 jobs:
   file-labeler:
@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: TimonVS/pr-labeler-action@v3
         with:
-          configuration-path: .github/branch-labeler.yml
+          configuration-path: ./.github/branch-labeler.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   label-verify:
