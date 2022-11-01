@@ -18,9 +18,12 @@ jobs:
           distribution: 'zulu'
           java-version: 11
       - name: Analyze with SonarCloud
-        #       set environment variables:
+        uses: sonarsource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: my-custom-directory
+          args: >
+            -Dsonar.organization=ravenvss
+            -Dsonar.projectKey=RavenVSS_Hotel
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        #       run sonar maven plugin:
-        run: mvn -B verify sonar:sonar -Dsonar.projectKey=RavenVSS_Hotel -Dsonar.organization=ravenvss -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.coverage.jacoco.xmlReportPaths=./target/site/jacoco/jacoco.xml
