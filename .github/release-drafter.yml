@@ -16,9 +16,6 @@ categories:
       - 'type:config'
       - 'type:build'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
-template: |
-  ## Changes
-  $CHANGES
 
 autolabeler:
   - label: 'type:build'
@@ -50,3 +47,7 @@ autolabeler:
     files:
       - ".idea/**"
       - "target/**"
+
+template: |
+  ## Changes
+  $CHANGES
