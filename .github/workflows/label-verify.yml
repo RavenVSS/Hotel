@@ -6,7 +6,7 @@ on:
 
 jobs:
   triage:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: zwaldowski/match-label-action@v4
         with:
