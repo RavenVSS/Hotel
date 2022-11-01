@@ -4,17 +4,12 @@ on:
   push:
     branches:
       - master
-  pull_request:
-    types: [ opened, labeled, unlabeled, synchronize ]
-
-permissions:
-  contents: read
 
 jobs:
   update_draft_release:
     permissions:
       contents: write
-      pull-requests: write
+      pull-requests: read
     runs-on: ubuntu-18.04
     steps:
       - uses: release-drafter/release-drafter@v5
