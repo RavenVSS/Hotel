@@ -6,9 +6,9 @@
   - "Dockerfile"
   - ".codecov.yml"
 'type:features':
-  - "src/main/*"
+  - "src/main/**"
 'type:tests':
-  - "src/test/*"
+  - "src/test/**"
 'type:documentation':
   - '*.md'
   - "docs/**"
