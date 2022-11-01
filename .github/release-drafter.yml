@@ -1,22 +1,6 @@
 name-template: 'Release $NEXT_PATCH_VERSION'
 tag-template: 'v$NEXT_PATCH_VERSION'
 
-categories:
-  - title: '🚀 New Features'
-    labels:
-      - 'type:features'
-  - title: '🐞 Bugs Fixes'
-    labels:
-      - 'type:fix'
-  - title: '📚 Documentation'
-    labels:
-      - 'type:documentation'
-  - title: '🛠 Configuration'
-    labels:
-      - 'type:config'
-      - 'type:build'
-change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
-
 autolabeler:
   - label: 'type:build'
     files:
@@ -48,6 +32,21 @@ autolabeler:
       - ".idea/**"
       - "target/**"
 
+categories:
+  - title: '🚀 New Features'
+    labels:
+      - 'type:features'
+  - title: '🐞 Bugs Fixes'
+    labels:
+      - 'type:fix'
+  - title: '📚 Documentation'
+    labels:
+      - 'type:documentation'
+  - title: '🛠 Configuration'
+    labels:
+      - 'type:config'
+      - 'type:build'
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 template: |
   ## Changes
   $CHANGES
