@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,8 +18,7 @@ public class GuestController {
     private final GuestMapper guestMapper;
 
     @PostMapping("create")
-    @ApiOperation(value = "Зарегистировать гостя со всеми данными. Доступ: WORKER", nickname = "Register guest")
-    @PreAuthorize("hasRole('WORKER')")
+    @ApiOperation(value = "Зарегистировать гостя со всеми данными", nickname = "Register guest")
     @ResponseStatus(value = HttpStatus.CREATED)
     public void addNewGuest(@RequestBody GuestCreateDto guestCreateDto) {
         guestService.create(guestMapper.fromDto(guestCreateDto));
