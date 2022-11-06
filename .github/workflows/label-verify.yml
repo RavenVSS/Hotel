@@ -18,6 +18,7 @@ jobs:
           mode: minimum
           count: 1
           labels: "type:fix, type:features, type:documentation, type:tests, type:config, type:build"
+          exit_type: success
   labeler:
     runs-on: ubuntu-20.04
     needs: label-verify
