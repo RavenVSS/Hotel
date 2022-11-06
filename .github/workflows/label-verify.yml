@@ -9,6 +9,10 @@ jobs:
   label-verify:
     runs-on: ubuntu-20.04
     steps:
-      - uses: zwaldowski/match-label-action@v4
+      - uses: mheap/github-action-required-labels@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          allowed: 'type:fix, type:features, type:documentation, type:tests, type:config, type:build'
+          mode: exactly
+          count: 1
+          labels: "type:fix, type:features, type:documentation, type:tests, type:config, type:build"

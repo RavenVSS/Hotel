@@ -2,7 +2,7 @@ name: Auto-assign themes to PR
 
 on:
   pull_request:
-    types: [ opened, reopened ]
+    types: [ opened ]
 
 jobs:
   file-labeler:
@@ -26,9 +26,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   label-verify:
     needs: branch-labeler
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-      - uses: zwaldowski/match-label-action@v4
-        with:
-          allowed: 'type:fix, type:features, type:documentation, type:tests, type:config, type:build'
+    uses: ./.github/workflows/label-verify.yml
