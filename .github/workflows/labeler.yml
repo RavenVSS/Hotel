@@ -26,4 +26,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   label-verify:
     needs: branch-labeler
-    uses: ./.github/workflows/label-verify.yml
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/workflows/label-verify.yml
