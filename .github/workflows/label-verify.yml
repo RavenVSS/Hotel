@@ -22,5 +22,6 @@ jobs:
   labeler:
     runs-on: ubuntu-20.04
     needs: label-verify
-    if: needs.label-verify.outputs.status == 'failure'
-    uses: ./.github/workflows/labeler.yml
+    steps:
+      - if: needs.label-verify.outputs.status == 'failure'
+        uses: ./.github/workflows/labeler.yml
