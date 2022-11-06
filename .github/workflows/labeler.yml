@@ -29,4 +29,6 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/workflows/label-verify.yml
+      - uses: zwaldowski/match-label-action@v4
+        with:
+          allowed: 'type:fix, type:features, type:documentation, type:tests, type:config, type:build'
