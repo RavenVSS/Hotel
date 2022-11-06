@@ -13,6 +13,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          mode: exactly
+          mode: minimum
           count: 1
           labels: "type:fix, type:features, type:documentation, type:tests, type:config, type:build"
