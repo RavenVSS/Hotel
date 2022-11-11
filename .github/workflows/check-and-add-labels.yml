@@ -9,15 +9,10 @@ jobs:
     uses: ./.github/workflows/label-verify.yml
     with:
       exit_type: ${{ github.event.action == 'opened' && 'success' || 'failure' }}
-      secrets: inherit
   labeler:
     if: needs.label-verify.outputs.result == 'failure'
     needs: label-verify
     uses: ./.github/workflows/labeler.yml
-    with:
-      secrets: inherit
   retry-label-verify:
     needs: labeler
     uses: ./.github/workflows/label-verify.yml
-    with:
-      secrets: inherit
