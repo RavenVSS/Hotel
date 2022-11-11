@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: check-labels
-      - uses: ./.github/workflows/label-verify.yml
+        uses: ./.github/workflows/label-verify.yml
         with:
           exit_type: ${{ github.event.action == 'opened' && 'success' || 'failure' }}
   labeler:
