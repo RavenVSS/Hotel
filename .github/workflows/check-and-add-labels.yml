@@ -11,7 +11,7 @@ jobs:
     with:
       exit_type: ${{ github.event.action == 'opened' && 'success' || 'failure' }}
   labeler:
-    name: Auto-assign themes to PR
+    name: Auto-assign labels to PR
     if: needs.label-verify.outputs.result == 'failure'
     needs: label-verify
     uses: ./.github/workflows/labeler.yml

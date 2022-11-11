@@ -1,4 +1,4 @@
-name: Auto-assign themes to PR
+name: Auto-assign labels to PR
 
 on:
   workflow_call:
