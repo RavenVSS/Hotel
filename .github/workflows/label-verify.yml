@@ -1,9 +1,15 @@
 name: Verify labels in PR
 
 on:
-  pull_request:
-    types: [ opened, labeled, unlabeled, synchronize ]
   workflow_call:
+    inputs:
+      exit_type:
+        default: failure
+        required: false
+        type: string
+    outputs:
+      result:
+        value: ${{ jobs.label-verify.outputs.status }}
 
 jobs:
   label-verify:
@@ -19,13 +25,4 @@ jobs:
           mode: minimum
           count: 1
           labels: "type:fix, type:features, type:documentation, type:tests, type:config, type:build"
-#         Ignore the error when the opened event.
-          exit_type: ${{ github.event.action == 'opened' && github.event_name!='workflow_call' && 'success' || 'failure' }}
-  labeler:
-    runs-on: ubuntu-20.04
-    needs: label-verify
-    steps:
-      - uses: actions/checkout@v3
-#       If label-verify is not passed, then we launch the labeler.
-      - if: needs.label-verify.outputs.status == 'failure'
-        uses: ./.github/workflows/labeler.yml
+          exit_type: ${{ inputs.exit_type }}
