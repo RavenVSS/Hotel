@@ -20,7 +20,7 @@ jobs:
           count: 1
           labels: "type:fix, type:features, type:documentation, type:tests, type:config, type:build"
 #         Ignore the error when the opened event.
-          exit_type: ${{ github.event.action == 'opened' && !github.event_name='workflow_call' && 'success' || 'failure' }}
+          exit_type: ${{ github.event.action == 'opened' && github.event_name!='workflow_call' && 'success' || 'failure' }}
   labeler:
     runs-on: ubuntu-20.04
     needs: label-verify
