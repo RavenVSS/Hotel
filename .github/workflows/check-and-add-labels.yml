@@ -7,8 +7,6 @@ on:
 jobs:
   label-verify:
     uses: ./.github/workflows/label-verify.yml
-    outputs:
-      result: ${{ steps.check-labels.outputs.result }}
     with:
       exit_type: ${{ github.event.action == 'opened' && 'success' || 'failure' }}
       secrets: inherit
