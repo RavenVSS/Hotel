@@ -6,13 +6,16 @@ on:
 
 jobs:
   label-verify:
+    name: Verify labels in PR
     uses: ./.github/workflows/label-verify.yml
     with:
       exit_type: ${{ github.event.action == 'opened' && 'success' || 'failure' }}
   labeler:
+    name: Auto-assign themes to PR
     if: needs.label-verify.outputs.result == 'failure'
     needs: label-verify
     uses: ./.github/workflows/labeler.yml
   retry-label-verify:
+    name: Retry verify labels in PR
     needs: labeler
     uses: ./.github/workflows/label-verify.yml
