@@ -6,18 +6,20 @@ on:
 
 jobs:
   label-verify:
-    runs-on: ubuntu-20.04
+    uses: ./.github/workflows/label-verify.yml
     outputs:
       result: ${{ steps.check-labels.outputs.result }}
-    uses: ./.github/workflows/label-verify.yml
     with:
       exit_type: ${{ github.event.action == 'opened' && 'success' || 'failure' }}
+      secrets: inherit
   labeler:
     if: needs.label-verify.outputs.result == 'failure'
-    runs-on: ubuntu-20.04
     needs: label-verify
     uses: ./.github/workflows/labeler.yml
+    with:
+      secrets: inherit
   retry-label-verify:
-    runs-on: ubuntu-20.04
     needs: labeler
     uses: ./.github/workflows/label-verify.yml
+    with:
+      secrets: inherit
