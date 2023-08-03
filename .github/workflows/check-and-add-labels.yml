@@ -12,10 +12,16 @@ jobs:
       exit_type: ${{ github.event.action == 'opened' && 'success' || 'failure' }}
   labeler:
     name: Auto-assign labels to PR
+    permissions:
+      contents: read
+      pull-requests: write
     if: needs.label-verify.outputs.result == 'failure'
     needs: label-verify
     uses: ./.github/workflows/labeler.yml
   retry-label-verify:
     name: Retry verify labels in PR
+    permissions:
+      contents: read
+      pull-requests: write
     needs: labeler
     uses: ./.github/workflows/label-verify.yml
